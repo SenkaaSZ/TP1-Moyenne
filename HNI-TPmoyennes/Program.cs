@@ -67,4 +67,131 @@ class Note
     }
 }
 
+class Eleve
+{
+    public string prenom { get; private set; }
+    public string nom { get; private set; }
+    public List<Note> notes { get; private set; }
+    private int counterNote = 0;
+    private readonly int counterNoteMax = 200;
+    public Eleve(string Prenom, string Nom)
+    {
+        prenom = Prenom;
+        nom = Nom;
+        notes = new List<Note>();
+    }
+    public void ajouterNote (Note note)
+    {
+        counterNote++;
+        if (counterNote <= counterNoteMax)
+        {
+            notes.Add(note);
+        }
+        else
+        {
+            Console.WriteLine("Vous avez atteint la limite de {0} d'ajouts des notes pour l'élève {1} {2}. L'ajout d'une " + counterNote + " e note est interdit.", counterNoteMax, prenom, nom);
+        }
+    }
+    //Moyenne d'un élève dans une matière
+    public float Moyenne(int matiere)
+    {
+        float sommeNote = 0;
+        int counterNote = 0;
+        foreach (Note noteEleve in notes)
+        {
+            if (noteEleve.matiere == matiere)
+            {
+                sommeNote += noteEleve.note;
+                counterNote++;
+            }
+        }
+        double moyenne = Math.Truncate(sommeNote / counterNote * 100) / 100;
+        return (float)moyenne;
+    }
+    // Moyenne générale d'un élève
+    public float Moyenne()
+    {
+        float sommeNote = 0;
+        int counterNote = 0;
+        foreach (Note noteEleve in notes)
+        {
+            sommeNote += noteEleve.note;
+            counterNote++;
+        }
+        double moyenne = Math.Truncate(sommeNote / counterNote * 100) / 100;
+        return (float)moyenne;
+    }
+}
+
+class Classe
+{
+    public string nomClasse { get; private set; }
+    public List<Eleve> eleves { get; private set; }
+    public List<string> matieres { get; private set; }
+    private int counterEleve = 0;
+    private readonly int counterEleveMax = 30;
+    private int counterMatiere = 0;
+    private readonly int counterMatiereMax = 10;
+    public Classe(string NomClasse)
+    {
+        nomClasse = NomClasse;
+        eleves = new List<Eleve>();
+        matieres = new List<string>();
+    }
+    public void ajouterEleve(string prenom, string nom)
+    {
+        counterEleve++;
+        if (counterEleve <= counterEleveMax)
+        {
+            Eleve eleve = new Eleve(prenom, nom);
+            eleves.Add(eleve);
+        }
+        else
+        {
+            Console.WriteLine("Vous avez atteint la limite de {0} d'ajouts des élèves pour la classe {1}. L'ajout d'un " + counterEleve + " e élève est interdit.", counterEleveMax, nomClasse);
+        }
+    }
+    public void ajouterMatiere(string nomMatiere)
+    {
+        counterMatiere++;
+        if (counterMatiere <= counterMatiereMax)
+        {
+            matieres.Add(nomMatiere);
+        }
+        else
+        {
+            Console.WriteLine("Vous avez atteint la limite de {0} d'ajouts des matières pour la classe {1}. L'ajout d'une " + counterMatiere + " e matière est interdit.", counterMatiereMax, nomClasse);
+        }
+    }
+    public int GetNombreMatiere()
+    {
+        return matieres.Count;
+    }
+    //Moyenne de la classe dans une matière
+    public float Moyenne(int matiere)
+    {
+        float sommeNote = 0;
+        int counterEleve = 0;
+        foreach (Eleve eleve in eleves)
+        {
+            sommeNote += eleve.Moyenne(matiere);
+            counterEleve++;
+        }
+        double moyenne = Math.Truncate(sommeNote / counterEleve * 100) / 100;
+        return (float)moyenne;
+    }
+    // Moyenne générale de la classe
+    public float Moyenne()
+    {
+        float sommeMoyenne = 0;
+        int counterMoyenne = 0;
+        for(int matiere = 0; matiere < matieres.Count; matiere++)
+        {
+            sommeMoyenne += Moyenne(matiere);
+            counterMoyenne++;
+        }
+        double moyenne = Math.Truncate(sommeMoyenne / counterMoyenne * 100) / 100;
+        return (float)moyenne;
+    }
+}
 
